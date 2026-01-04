@@ -150,20 +150,19 @@ const About = () => {
                                 />
                             </div>
                             {/* Floating Card */}
+                            {/* Floating Card */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4 }}
-                                className="absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl border border-gray-100 hidden md:block"
+                                className="absolute -bottom-6 -right-4 md:-bottom-10 md:-right-10 bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-gray-100 z-20 flex items-center gap-4"
                             >
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center">
-                                        <Target className={`w-6 h-6 text-blue-600`} />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">Focus</div>
-                                        <div className="font-bold text-gray-900">Precision & Quality</div>
-                                    </div>
+                                <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-50 rounded-full flex items-center justify-center">
+                                    <Target className="w-5 h-5 md:w-7 md:h-7 text-blue-600" />
+                                </div>
+                                <div>
+                                    <div className="text-xs md:text-sm text-gray-500 font-medium">Focus</div>
+                                    <div className="text-sm md:text-lg font-bold text-gray-900">Precision & Quality</div>
                                 </div>
                             </motion.div>
                         </motion.div>

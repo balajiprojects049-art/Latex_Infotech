@@ -72,7 +72,7 @@ const Header = () => {
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 shadow-md backdrop-blur-md' : 'bg-transparent'
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${(isScrolled || isMobileMenuOpen) ? 'bg-white/90 dark:bg-gray-900/90 shadow-md backdrop-blur-md' : 'bg-transparent'
                 }`}
         >
             <nav className="container-custom">
@@ -81,7 +81,7 @@ const Header = () => {
                     <Link to="/" className="flex items-center">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
-                            className={`text-2xl font-bold ${gradientText}`}
+                            className={`text-2xl font-bold ${(isScrolled || isMobileMenuOpen) ? gradientText : 'text-white'}`}
                         >
                             Latex Infotech
                         </motion.div>
@@ -150,16 +150,16 @@ const Header = () => {
                     <div className="md:hidden flex items-center gap-4">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className={`p-2 rounded-md transition-colors ${isScrolled
+                            className={`p-2 rounded-md transition-colors ${(isScrolled || isMobileMenuOpen)
                                 ? 'hover:bg-gray-100 dark:hover:bg-gray-800'
                                 : 'hover:bg-white/10'
                                 }`}
                             aria-label="Toggle menu"
                         >
                             {isMobileMenuOpen ? (
-                                <X className={`w-6 h-6 ${isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white'}`} />
+                                <X className={`w-6 h-6 ${(isScrolled || isMobileMenuOpen) ? 'text-gray-700 dark:text-gray-200' : 'text-white'}`} />
                             ) : (
-                                <Menu className={`w-6 h-6 ${isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white'}`} />
+                                <Menu className={`w-6 h-6 ${(isScrolled || isMobileMenuOpen) ? 'text-gray-700 dark:text-gray-200' : 'text-white'}`} />
                             )}
                         </button>
                     </div>

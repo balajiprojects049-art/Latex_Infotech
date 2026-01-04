@@ -38,7 +38,7 @@ const Home = () => {
     const gradientBg = "bg-gradient-to-r from-blue-600 to-cyan-500";
 
     return (
-        <div>
+        <div className="overflow-x-hidden">
             {/* Hero Section - Eureka Style with Background Image */}
             <section className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden">
                 {/* Background Image */}
@@ -50,7 +50,7 @@ const Home = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 z-0" />
 
-                <div className="container-custom relative z-10">
+                <div className="container-custom relative z-10 pt-20 md:pt-0 pb-12 md:pb-0">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ const Home = () => {
             </section>
 
             {/* Introduction Section - Two Column with Badge */}
-            <section className="py-20 md:py-28 bg-white">
+            <section className="py-20 md:py-28 bg-white overflow-hidden">
                 <div className="container-custom">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <motion.div
@@ -120,7 +120,7 @@ const Home = () => {
 
                             {/* Floating badge - Compact & Hanging Off */}
                             <motion.div
-                                className={`absolute -bottom-8 -right-8 backdrop-blur-md bg-white/10 border border-white/20 text-white px-6 py-4 rounded-xl shadow-2xl z-20 ${gradientBg}`}
+                                className={`absolute -bottom-8 right-4 md:-right-8 backdrop-blur-md bg-white/10 border border-white/20 text-white px-6 py-4 rounded-xl shadow-2xl z-20 ${gradientBg}`}
                                 animate={{ y: [0, -8, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             >

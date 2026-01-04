@@ -61,9 +61,9 @@ const Careers = () => {
     const gradientBg = "bg-gradient-to-r from-blue-600 to-cyan-500";
 
     return (
-        <div>
+        <div className="overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative py-32 min-h-[600px] flex items-center">
+            <section className="relative py-20 md:py-32 min-h-[400px] md:min-h-[600px] flex items-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40 z-10" />
                     <img
@@ -73,7 +73,7 @@ const Careers = () => {
                     />
                 </div>
 
-                <div className="container-custom relative z-20">
+                <div className="container-custom relative z-20 md:pt-0">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}

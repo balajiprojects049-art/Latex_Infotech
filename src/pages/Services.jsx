@@ -15,9 +15,9 @@ const Services = () => {
     return (
         <div>
             {/* Hero Section */}
-            <section className="relative py-32 min-h-[500px] flex items-center bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: 'url("/assets/images/services-hero.png")' }}>
+            <section className="relative py-32 min-h-[500px] flex items-center bg-cover bg-center bg-no-repeat bg-scroll md:bg-fixed" style={{ backgroundImage: 'url("/assets/images/services-hero.png")' }}>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/50 z-0" />
-                <div className="container-custom relative z-10">
+                <div className="container-custom relative z-10 pt-20 md:pt-0">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ const Services = () => {
                                     <motion.div
                                         variants={childVariants}
                                         whileHover={{ scale: 1.02 }}
-                                        className="lg:w-1/2 flex justify-center relative group"
+                                        className="w-full lg:w-1/2 flex justify-center relative group"
                                     >
                                         <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full transform scale-90 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

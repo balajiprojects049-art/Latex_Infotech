@@ -94,9 +94,9 @@ const Contact = () => {
     ];
 
     return (
-        <div>
+        <div className="overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative py-32 min-h-[500px] flex items-center overflow-hidden">
+            <section className="relative py-20 md:py-32 min-h-[400px] md:min-h-[500px] flex items-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-gray-900/90 mix-blend-multiply z-10" />
                     <img
@@ -106,7 +106,7 @@ const Contact = () => {
                     />
                 </div>
 
-                <div className="container-custom relative z-20 text-center">
+                <div className="container-custom relative z-20 text-center md:pt-0">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}

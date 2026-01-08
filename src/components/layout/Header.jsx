@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../../assets/logo.png';
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -76,14 +77,23 @@ const Header = () => {
                 }`}
         >
             <nav className="container-custom">
-                <div className="flex items-center justify-between h-20">
+                <div className="flex items-center justify-between h-24">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center">
+                    <Link
+                        to="/"
+                        className={`flex items-center p-2 rounded-xl transition-colors ${(isScrolled || isMobileMenuOpen)
+                            ? 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            : 'hover:bg-white/10'
+                            }`}
+                    >
                         <motion.div
                             whileHover={{ scale: 1.05 }}
-                            className={`text-2xl font-bold ${(isScrolled || isMobileMenuOpen) ? gradientText : 'text-white'}`}
                         >
-                            Latex Infotech
+                            <img
+                                src={logo}
+                                alt="Latex Infotech"
+                                className="h-20 w-auto object-contain"
+                            />
                         </motion.div>
                     </Link>
 
@@ -200,7 +210,7 @@ const Header = () => {
                     )}
                 </AnimatePresence>
             </nav>
-        </header>
+        </header >
     );
 };
 

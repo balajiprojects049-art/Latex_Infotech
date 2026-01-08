@@ -15,7 +15,7 @@ const Footer = () => {
     const socialLinks = [
         { icon: Facebook, label: 'Facebook', href: '#', disabled: true },
         { icon: Instagram, label: 'Instagram', href: '#', disabled: true },
-        { icon: Linkedin, label: 'LinkedIn', href: '#', disabled: true },
+        { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/latex-infotech/', disabled: false },
     ];
 
     // Shared gradient styles
@@ -151,14 +151,30 @@ const Footer = () => {
                         <div className="flex gap-3">
                             {socialLinks.map((social) => {
                                 const Icon = social.icon;
+
+                                if (social.disabled) {
+                                    return (
+                                        <div
+                                            key={social.label}
+                                            className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center opacity-50 cursor-not-allowed"
+                                            title={`${social.label} (Coming Soon)`}
+                                        >
+                                            <Icon className="w-5 h-5 text-gray-500" />
+                                        </div>
+                                    );
+                                }
+
                                 return (
-                                    <div
+                                    <a
                                         key={social.label}
-                                        className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center opacity-50 cursor-not-allowed"
-                                        title={`${social.label} (Coming Soon)`}
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-all duration-300 group hover:scale-110"
+                                        aria-label={social.label}
                                     >
-                                        <Icon className="w-5 h-5 text-gray-500" />
-                                    </div>
+                                        <Icon className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+                                    </a>
                                 );
                             })}
                         </div>

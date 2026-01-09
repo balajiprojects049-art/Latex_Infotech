@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, ArrowRight, Clock, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, ArrowRight, Clock, MessageSquare, Loader2 } from 'lucide-react';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -13,7 +13,9 @@ const Contact = () => {
     const [formStatus, setFormStatus] = useState({
         submitted: false,
         success: false,
-        error: false
+        error: false,
+        loading: false,
+        message: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -53,16 +55,56 @@ const Contact = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            setFormStatus({ submitted: true, success: true, error: false });
-            setTimeout(() => {
-                setFormData({ name: '', email: '', phone: '', message: '' });
-                setFormStatus({ submitted: false, success: false, error: false });
-            }, 3000);
-        } else {
-            setFormStatus({ submitted: false, success: false, error: true });
+
+        if (!validateForm()) {
+            setFormStatus({ submitted: false, success: false, error: true, loading: false, message: 'Please fix the errors in the form' });
+            return;
+        }
+
+        // Set loading state
+        setFormStatus({ submitted: true, success: false, error: false, loading: true, message: '' });
+
+        try {
+            // Call your own email server (no third-party!)
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Show success message
+                setFormStatus({
+                    submitted: true,
+                    success: true,
+                    error: false,
+                    loading: false,
+                    message: data.message || 'Message sent successfully! We\'ll get back to you within 24 hours.'
+                });
+
+                // Clear form after 5 seconds
+                setTimeout(() => {
+                    setFormData({ name: '', email: '', phone: '', message: '' });
+                    setFormStatus({ submitted: false, success: false, error: false, loading: false, message: '' });
+                }, 5000);
+            } else {
+                throw new Error(data.error || 'Failed to send email');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            setFormStatus({
+                submitted: true,
+                success: false,
+                error: true,
+                loading: false,
+                message: error.message || 'Failed to send message. Please try again or contact us directly at info@latexinfotech.com'
+            });
         }
     };
 
@@ -234,7 +276,18 @@ const Contact = () => {
                                             className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3"
                                         >
                                             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                                            <p className="text-green-800 font-medium">Message sent successfully! We'll allow 24 hours.</p>
+                                            <p className="text-green-800 font-medium">{formStatus.message || "Message sent successfully! We'll get back to you within 24 hours."}</p>
+                                        </motion.div>
+                                    )}
+                                    {formStatus.error && !formStatus.loading && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3"
+                                        >
+                                            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                                            <p className="text-red-800 font-medium">{formStatus.message || 'Failed to send message. Please try again.'}</p>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -295,12 +348,22 @@ const Contact = () => {
 
                                     <motion.button
                                         type="submit"
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className={`w-full text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 group ${gradientBg}`}
+                                        disabled={formStatus.loading}
+                                        whileHover={{ scale: formStatus.loading ? 1 : 1.02 }}
+                                        whileTap={{ scale: formStatus.loading ? 1 : 0.98 }}
+                                        className={`w-full text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 group ${gradientBg} ${formStatus.loading ? 'opacity-75 cursor-not-allowed' : ''}`}
                                     >
-                                        Send Message
-                                        <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        {formStatus.loading ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Send Message
+                                                <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                            </>
+                                        )}
                                     </motion.button>
                                 </form>
                             </div>

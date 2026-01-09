@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -21,6 +22,74 @@ const Footer = () => {
     // Shared gradient styles
     const gradientText = "text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500";
     const gradientBg = "bg-gradient-to-r from-blue-600 to-cyan-500";
+
+    // Consultation Form State
+    const [consultationEmail, setConsultationEmail] = useState('');
+    const [consultationStatus, setConsultationStatus] = useState({
+        loading: false,
+        success: false,
+        error: false,
+        message: ''
+    });
+
+    const handleConsultationSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!consultationEmail || !/\S+@\S+\.\S+/.test(consultationEmail)) {
+            setConsultationStatus({
+                loading: false,
+                success: false,
+                error: true,
+                message: 'Please enter a valid email address'
+            });
+            return;
+        }
+
+        setConsultationStatus({ loading: true, success: false, error: false, message: '' });
+
+        try {
+            // Using the same API endpoint, providing default values for required fields
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: 'Consultation Request',
+                    email: consultationEmail,
+                    phone: 'Not Provided',
+                    message: 'User requested a consultation via the website footer form.'
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setConsultationStatus({
+                    loading: false,
+                    success: true,
+                    error: false,
+                    message: 'Request sent! We will contact you soon.'
+                });
+                setConsultationEmail('');
+
+                // Reset status after 5 seconds
+                setTimeout(() => {
+                    setConsultationStatus({ loading: false, success: false, error: false, message: '' });
+                }, 5000);
+            } else {
+                throw new Error(data.error || 'Failed to send request');
+            }
+        } catch (error) {
+            console.error('Consultation error:', error);
+            setConsultationStatus({
+                loading: false,
+                success: false,
+                error: true,
+                message: 'Failed to send. Please try again.'
+            });
+        }
+    };
 
     return (
         <footer className="bg-gray-900 text-white">
@@ -87,23 +156,63 @@ const Footer = () => {
                 </div>
 
                 {/* Newsletter/Consultation Box */}
-                <div className="bg-gray-800 rounded-3xl p-8 md:p-12 mb-16">
-                    <div className="max-w-2xl mx-auto text-center">
+                <div className="bg-gray-800 rounded-3xl p-8 md:p-12 mb-16 relative overflow-hidden">
+                    {/* Background element for visual interest */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+
+                    <div className="max-w-2xl mx-auto text-center relative z-10">
                         <h3 className="text-3xl font-bold mb-4">Request a Consultation</h3>
                         <p className="text-gray-300 mb-8">
                             Get in touch with our experts to discuss your project requirements
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="px-6 py-4 bg-gray-700 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 max-w-md"
-                            />
-                            <button className={`text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center gap-2 ${gradientBg}`}>
-                                Submit
-                                <ArrowRight className="w-5 h-5" />
+
+                        <form onSubmit={handleConsultationSubmit} className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <div className="flex-1 max-w-md relative">
+                                <input
+                                    type="email"
+                                    value={consultationEmail}
+                                    onChange={(e) => setConsultationEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    disabled={consultationStatus.loading || consultationStatus.success}
+                                    className={`w-full px-6 py-4 bg-gray-700 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60 transition-all ${consultationStatus.error ? 'ring-2 ring-red-500' : ''}`}
+                                />
+                                {consultationStatus.success && (
+                                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-400">
+                                        <CheckCircle className="w-6 h-6" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={consultationStatus.loading || consultationStatus.success}
+                                className={`text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center gap-2 ${gradientBg} disabled:opacity-70 disabled:cursor-not-allowed min-w-[140px]`}
+                            >
+                                {consultationStatus.loading ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : consultationStatus.success ? (
+                                    "Sent!"
+                                ) : (
+                                    <>
+                                        Submit
+                                        <ArrowRight className="w-5 h-5" />
+                                    </>
+                                )}
                             </button>
-                        </div>
+                        </form>
+
+                        {/* Status Messages */}
+                        {consultationStatus.error && (
+                            <p className="text-red-400 mt-4 text-sm flex items-center justify-center gap-2">
+                                <AlertCircle className="w-4 h-4" />
+                                {consultationStatus.message}
+                            </p>
+                        )}
+                        {consultationStatus.success && (
+                            <p className="text-green-400 mt-4 text-sm font-medium">
+                                {consultationStatus.message}
+                            </p>
+                        )}
                     </div>
                 </div>
 
